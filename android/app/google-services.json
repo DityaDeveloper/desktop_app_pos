@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "850924075877",
+    "project_id": "client-prayogi-spkahp",
+    "storage_bucket": "client-prayogi-spkahp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850924075877:android:ad5ed6aa2da80f7eaabf8c",
+        "android_client_info": {
+          "package_name": "com.example.desktop_app_pos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6Rdx7zEYQnkeRxuJp5yN3I1bw2pxuYO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
