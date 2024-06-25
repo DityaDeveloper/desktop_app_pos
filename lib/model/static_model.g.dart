@@ -14,6 +14,7 @@ _$_StaticModel _$$_StaticModelFromJson(Map<String, dynamic> json) =>
       qty: json['qty'] as int,
       unit: json['unit'] as String,
       price: json['price'] as int,
+      image: json['image'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_StaticModelToJson(_$_StaticModel instance) =>
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$_StaticModelToJson(_$_StaticModel instance) =>
       'qty': instance.qty,
       'unit': instance.unit,
       'price': instance.price,
+      'image': instance.image,
     };

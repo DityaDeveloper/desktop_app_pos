@@ -26,6 +26,7 @@ mixin _$StaticModel {
   int get qty => throw _privateConstructorUsedError;
   String get unit => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
+  String get image => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,7 +41,13 @@ abstract class $StaticModelCopyWith<$Res> {
       _$StaticModelCopyWithImpl<$Res, StaticModel>;
   @useResult
   $Res call(
-      {String ref, String id, String name, int qty, String unit, int price});
+      {String ref,
+      String id,
+      String name,
+      int qty,
+      String unit,
+      int price,
+      String image});
 }
 
 /// @nodoc
@@ -62,6 +69,7 @@ class _$StaticModelCopyWithImpl<$Res, $Val extends StaticModel>
     Object? qty = null,
     Object? unit = null,
     Object? price = null,
+    Object? image = null,
   }) {
     return _then(_value.copyWith(
       ref: null == ref
@@ -88,6 +96,10 @@ class _$StaticModelCopyWithImpl<$Res, $Val extends StaticModel>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -101,7 +113,13 @@ abstract class _$$_StaticModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String ref, String id, String name, int qty, String unit, int price});
+      {String ref,
+      String id,
+      String name,
+      int qty,
+      String unit,
+      int price,
+      String image});
 }
 
 /// @nodoc
@@ -121,6 +139,7 @@ class __$$_StaticModelCopyWithImpl<$Res>
     Object? qty = null,
     Object? unit = null,
     Object? price = null,
+    Object? image = null,
   }) {
     return _then(_$_StaticModel(
       ref: null == ref
@@ -147,6 +166,10 @@ class __$$_StaticModelCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -160,7 +183,8 @@ class _$_StaticModel implements _StaticModel {
       required this.name,
       required this.qty,
       required this.unit,
-      required this.price});
+      required this.price,
+      this.image = ''});
 
   factory _$_StaticModel.fromJson(Map<String, dynamic> json) =>
       _$$_StaticModelFromJson(json);
@@ -177,10 +201,13 @@ class _$_StaticModel implements _StaticModel {
   final String unit;
   @override
   final int price;
+  @override
+  @JsonKey()
+  final String image;
 
   @override
   String toString() {
-    return 'StaticModel(ref: $ref, id: $id, name: $name, qty: $qty, unit: $unit, price: $price)';
+    return 'StaticModel(ref: $ref, id: $id, name: $name, qty: $qty, unit: $unit, price: $price, image: $image)';
   }
 
   @override
@@ -193,12 +220,14 @@ class _$_StaticModel implements _StaticModel {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.qty, qty) || other.qty == qty) &&
             (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.price, price) || other.price == price));
+            (identical(other.price, price) || other.price == price) &&
+            (identical(other.image, image) || other.image == image));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, ref, id, name, qty, unit, price);
+  int get hashCode =>
+      Object.hash(runtimeType, ref, id, name, qty, unit, price, image);
 
   @JsonKey(ignore: true)
   @override
@@ -221,7 +250,8 @@ abstract class _StaticModel implements StaticModel {
       required final String name,
       required final int qty,
       required final String unit,
-      required final int price}) = _$_StaticModel;
+      required final int price,
+      final String image}) = _$_StaticModel;
 
   factory _StaticModel.fromJson(Map<String, dynamic> json) =
       _$_StaticModel.fromJson;
@@ -238,6 +268,8 @@ abstract class _StaticModel implements StaticModel {
   String get unit;
   @override
   int get price;
+  @override
+  String get image;
   @override
   @JsonKey(ignore: true)
   _$$_StaticModelCopyWith<_$_StaticModel> get copyWith =>

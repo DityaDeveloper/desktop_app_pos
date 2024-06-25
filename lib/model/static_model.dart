@@ -12,7 +12,9 @@ class StaticModel with _$StaticModel {
     required String name,
     required int qty,
     required String unit,
-    required int price
+    required int price,
+    @Default('') String image
+
   }) = _StaticModel;
 
    factory StaticModel.fromJson(Map<String, dynamic> json) =>

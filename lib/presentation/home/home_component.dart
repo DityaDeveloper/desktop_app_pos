@@ -12,6 +12,9 @@ import 'package:intl/intl.dart';
 import '../../model/product/order_model.dart';
 import '../../model/static_model.dart';
 import '../login/login.dart';
+import 'ahp.dart';
+import 'ahp_alternatif_component.dart';
+import 'ahp_kriteria_component.dart';
 import 'product_mng_component.dart';
 import 'invoice_component.dart';
 import 'user_mng_component.dart';
@@ -307,9 +310,14 @@ String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
                                     height: 30,
                                     width: 100,
                                     child: GFButton(
-                                      onPressed: () => Get.snackbar(
-                                          'Pemberitahuan',
-                                          'Fitur ini sedang dalam pengembangan'),
+                                        onPressed: () => Get.to(
+                                         // const AhpAlternatifDataComponent()
+                                         // const AhpKriteriaDataComponent()
+                                         const AhpComponent()
+                                          ),
+                                      // onPressed: () => Get.snackbar(
+                                      //     'Pemberitahuan',
+                                      //     'Fitur ini sedang dalam pengembangan'),
                                       text: "SPK",
                                       textStyle: const TextStyle(
                                           fontWeight: FontWeight.bold),
@@ -693,8 +701,7 @@ String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
                                                     name: userorder!['name'],
                                                     qty: amount,
                                                     unit: userorder!['unit'],
-                                                    price: userorder!['price'] *
-                                                        amount,
+                                                    price: userorder!['price'] * amount,
                                                     createdAt: currentDate));
                                                 debugPrint(
                                                     'succes add item : $userorder');

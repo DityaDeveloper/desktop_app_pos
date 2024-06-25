@@ -1,36 +1,31 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math' as math;
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:http/http.dart' as http;
 
-import 'package:desktop_app_pos/model/static_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:math' as math;
 
 import '../../controller/product_mng_component.dart';
-import 'home.dart';
+import '../../model/ahp/ahp_alternatif_model.dart';
 
 GetStorage box = GetStorage();
 
-class ProductManagementComponent extends StatefulWidget {
-  const ProductManagementComponent({super.key});
+class AhpAlternatifDataComponent extends StatefulWidget {
+  const AhpAlternatifDataComponent({super.key});
 
   @override
-  State<ProductManagementComponent> createState() =>
-      _ProductManagementComponentState();
+  State<AhpAlternatifDataComponent> createState() =>
+      _AhpAlternatifDataComponentState();
 }
 
-class _ProductManagementComponentState
-    extends State<ProductManagementComponent> {
-  TextEditingController productNameCtr = TextEditingController();
-  TextEditingController productQtyCtr = TextEditingController();
-  TextEditingController productPriceCtr = TextEditingController();
+class _AhpAlternatifDataComponentState
+    extends State<AhpAlternatifDataComponent> {
+  TextEditingController namaAlternatifCtr = TextEditingController();
+  TextEditingController kodeCtr = TextEditingController();
 
   int count = 0;
-  List<StaticModel> ctx = [];
+  List<AhpAlternatifModel> ctx = [];
 
   @override
   void initState() {
@@ -42,57 +37,52 @@ class _ProductManagementComponentState
   storeProducts() async {
     var paymentsAsMap = ctx.map((payment) => payment.toJson()).toList();
     String jsonString = jsonEncode(paymentsAsMap);
-    await box.write('products', jsonString);
+    await box.write('alternatif', jsonString);
     debugPrint('success add : $paymentsAsMap');
     setState(() {
       dataSource = ProductDataTable(ctx);
     });
   }
 
-  sendProducts(StaticModel products) async {
+  sendProducts(AhpAlternatifModel item) async {
     Uri url = Uri.parse(
-        "https://client-prayogi-spkahp-default-rtdb.firebaseio.com/product.json");
+        "https://client-prayogi-spkahp-default-rtdb.firebaseio.com/ahp_data_alternatif.json");
     await http.post(url,
         body: jsonEncode({
-          "id": products.id,
-          "name": products.name,
-          "price": products.price,
-          "qty": products.qty,
-          "unit": products.unit,
+          "id": item.id,
+          "namaAlternatif": item.namaAlternatif,
+          "kode": item.kode
         }));
     getProducts();
   }
- 
 
   getProducts() async {
     Uri url = Uri.parse(
-        "https://client-prayogi-spkahp-default-rtdb.firebaseio.com/product.json");
+        "https://client-prayogi-spkahp-default-rtdb.firebaseio.com/ahp_data_alternatif.json");
     final response = await http.get(url);
 
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    ctx.clear();
-    extractedData.forEach((profileId, profileData) {
-      ctx.add(
-        StaticModel(
-          ref: profileId,
-          id: profileData['id'],
-          name: profileData['name'],
-          unit: profileData['unit'],
-          price: profileData['price'],
-          qty: profileData['qty'],
-        ),
-      );
-    });
+    if (response.body != "null") {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      ctx.clear();
+      extractedData.forEach((profileId, profileData) {
+        ctx.add(
+          AhpAlternatifModel(
+              id: profileId,
+              kode: profileData['kode'],
+              namaAlternatif: profileData['namaAlternatif']),
+        );
+      });
+    }
 
     setState(() {
       ctx;
       dataSource = ProductDataTable(ctx);
-      controller.isupdateTable.value = false;
+     // controller.isupdateTable.value = false;
     });
   }
 
   getdbProduct() {
-    var result = box.read('products');
+    var result = box.read('alternatif');
     List<dynamic> templist = [];
     if (result == null) {
       debugPrint('is null');
@@ -101,12 +91,13 @@ class _ProductManagementComponentState
       debugPrint('is not null');
       dynamic jsonData = jsonDecode(result);
       setState(() {
-        templist =
-            jsonData.map((object) => StaticModel.fromJson(object)).toList() ??
-                [];
-        ctx = templist.cast<StaticModel>();
+        templist = jsonData
+                .map((object) => AhpAlternatifModel.fromJson(object))
+                .toList() ??
+            [];
+        ctx = templist.cast<AhpAlternatifModel>();
         dataSource = ProductDataTable(ctx);
-        controller.isupdateTable.value = false;
+       // controller.isupdateTable.value = false;
       });
     }
   }
@@ -120,14 +111,17 @@ class _ProductManagementComponentState
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
 
-  final controller = Get.put(ProductManagementController());
+  //final controller = Get.put(ProductManagementController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Data Produk', style: TextStyle(fontWeight: FontWeight.bold),),
+          const Text(
+            'Data Alternatif',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           SizedBox(
             width: double.infinity,
             height: 370,
@@ -135,8 +129,8 @@ class _ProductManagementComponentState
               source: dataSource,
               arrowHeadColor: Colors.blue,
               onPageChanged: (value) => count,
-              columnSpacing: 5,
-              horizontalMargin: 5,
+              columnSpacing: 2,
+              horizontalMargin: 2,
               rowsPerPage: 5,
               showCheckboxColumn: false,
               //minWidth: 700,
@@ -145,7 +139,7 @@ class _ProductManagementComponentState
                   label: SizedBox(
                       width: 100,
                       child: Text(
-                        "ID",
+                        "no",
                         overflow: TextOverflow.ellipsis,
                       )),
                 ),
@@ -153,7 +147,7 @@ class _ProductManagementComponentState
                   label: SizedBox(
                       width: 100,
                       child: Text(
-                        "Nama Pakaian",
+                        "Kode",
                         overflow: TextOverflow.ellipsis,
                       )),
                 ),
@@ -161,15 +155,7 @@ class _ProductManagementComponentState
                   label: SizedBox(
                       width: 100,
                       child: Text(
-                        "Jumlah",
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                ),
-                DataColumn(
-                  label: SizedBox(
-                      width: 100,
-                      child: Text(
-                        "Harga",
+                        "Data Alternatif",
                         overflow: TextOverflow.ellipsis,
                       )),
                 ),
@@ -201,10 +187,7 @@ class _ProductManagementComponentState
                 child: Row(
                   children: [
                     Container(
-                     width: Get.width * .2,
-                     height: 200,
-                    color: Colors.red
-                    ),
+                        width: Get.width * .2, height: 200, color: Colors.red),
                     SizedBox(
                       width: Get.width * .5,
                       child: Padding(
@@ -212,29 +195,20 @@ class _ProductManagementComponentState
                         child: Column(
                           children: [
                             TextFormField(
-                              controller: productNameCtr,
-                              onChanged: (value) => productNameCtr.text,
+                              controller: kodeCtr,
+                              onChanged: (value) => kodeCtr.text,
                               decoration: const InputDecoration(
                                 border: UnderlineInputBorder(),
-                                labelText: 'Masukan nama pakaian',
+                                labelText: 'Masukan kode',
                               ),
                             ),
                             TextFormField(
-                              controller: productPriceCtr,
-                              onChanged: (value) => productPriceCtr.text,
-                              keyboardType: TextInputType.number,
+                              controller: namaAlternatifCtr,
+                              onChanged: (value) => namaAlternatifCtr.text,
+                              keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 border: UnderlineInputBorder(),
-                                labelText: 'Masukan harga pakaian',
-                              ),
-                            ),
-                            TextFormField(
-                              controller: productQtyCtr,
-                              onChanged: (value) => productQtyCtr.text,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'Masukan jumlah pakaian',
+                                labelText: 'Masukan nama alternatif',
                               ),
                             ),
                           ],
@@ -248,30 +222,25 @@ class _ProductManagementComponentState
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-               
                           SizedBox(
                             height: 40,
                             width: 100,
                             child: TextButton(
                               onPressed: () {
                                 String id = getRandomString(5);
-                                String name = productNameCtr.text;
-                                int price = int.parse(productPriceCtr.text);
-                                int qty = int.parse(productQtyCtr.text);
-                                
+                                String kode = kodeCtr.text;
+                                String namaAlternatif = namaAlternatifCtr.text;
+
                                 setState(() {
-                                  productNameCtr.clear();
-                                  productPriceCtr.clear();
-                                  productQtyCtr.clear();
+                                  kodeCtr.clear();
+                                  namaAlternatifCtr.clear();
                                 });
 
-                                sendProducts(StaticModel(
-                                    ref: '',
-                                    id: id,
-                                    name: name,
-                                    qty: qty,
-                                    unit: 'pcs',
-                                    price: price));
+                                sendProducts(AhpAlternatifModel(
+                                  id: id,
+                                  kode: kode,
+                                  namaAlternatif: namaAlternatif,
+                                ));
                                 //storeProducts();
                               },
                               style: TextButton.styleFrom(
@@ -285,7 +254,8 @@ class _ProductManagementComponentState
                             height: 40,
                             width: 100,
                             child: TextButton(
-                              onPressed: () => Get.to(const Home()),
+                              // onPressed: () => Get.to(const Home()),
+                                onPressed: () => Get.back(),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.redAccent,
@@ -308,14 +278,14 @@ class _ProductManagementComponentState
 }
 
 class ProductDataTable extends DataTableSource {
-  List<StaticModel> ctx;
+  List<AhpAlternatifModel> ctx;
 
   ProductDataTable(this.ctx) {
     //print(dataList);
   }
   // Generate some made-up data
 
-  storeProducts(List<StaticModel> data) async {
+  storeProducts(List<AhpAlternatifModel> data) async {
     var paymentsAsMap = data.map((payment) => payment.toJson()).toList();
     String jsonString = jsonEncode(paymentsAsMap);
     await box.write('products', jsonString);
@@ -333,18 +303,20 @@ class ProductDataTable extends DataTableSource {
       debugPrint('is not null');
 
       dynamic jsonData = jsonDecode(result);
-      templist =
-          jsonData.map((object) => StaticModel.fromJson(object)).toList() ?? [];
-      ctx = templist.cast<StaticModel>();
+      templist = jsonData
+              .map((object) => AhpAlternatifModel.fromJson(object))
+              .toList() ??
+          [];
+      ctx = templist.cast<AhpAlternatifModel>();
     }
   }
-   deleteProducts(StaticModel products) async {
-    Uri url = Uri.parse(
-        "https://client-prayogi-spkahp-default-rtdb.firebaseio.com/product/${products.ref}.json");
-    await http.delete(url);
-   // getdbProduct();
-  }
 
+  deleteProducts(AhpAlternatifModel products) async {
+    Uri url = Uri.parse(
+        "https://client-prayogi-spkahp-default-rtdb.firebaseio.com/ahp_data_alternatif/${products.id}.json");
+    await http.delete(url);
+    // getdbProduct();
+  }
 
   @override
   @override
@@ -355,30 +327,26 @@ class ProductDataTable extends DataTableSource {
   int get selectedRowCount => 0;
   @override
   DataRow getRow(int index) {
+    int no = index + 1;
     var data = ctx[index];
     return DataRow(
       cells: [
         DataCell(
           Text(
-            data.id.toString(),
+            no.toString(),
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        DataCell(
-          Text(
-            data.name,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        DataCell(Text(data.qty.toString())),
-        DataCell(Text(data.price.toString())),
+        
+        DataCell(Text(data.kode.toString())),
+        DataCell(Text(data.namaAlternatif.toString())),
         DataCell(InkWell(
             onTap: () {
               debugPrint('success delete $data');
               debugPrint('$ctx');
               deleteProducts(data);
               ctx.remove(data);
-              
+
               notifyListeners();
             },
             child: const Icon(Icons.delete, color: Colors.red))),

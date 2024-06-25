@@ -138,27 +138,45 @@ class _LoginComponentState extends State<LoginComponent> {
           Container(
             color: Colors.blueGrey,
             width: Get.width * .5,
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
-                  "Sistem Pendukung Keputusan (Analytical Hierarchy Process)",
+                  "",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
+                // Text(
+                //   "Sistem Pendukung Keputusan (Analytical Hierarchy Process)",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //       color: Colors.white, fontWeight: FontWeight.bold),
+                // ),
                 Text(
-                  "POS Ku",
+                  "",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
+                // Text(
+                //   "POS Ku",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //       color: Colors.white, fontWeight: FontWeight.bold),
+                // ),
                 Text(
-                  "@2023 - Ditya Developer",
+                  "",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
+                // Text(
+                //   "@2023 - Ditya Developer",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //       color: Colors.white, fontWeight: FontWeight.bold),
+                // ),
               ],
             ),
           ),
